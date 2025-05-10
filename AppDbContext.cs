@@ -16,8 +16,9 @@ namespace FinalProject
         public DbSet<Slot> Slots { get; set; }
         public DbSet<Staff> Staffs  { get; set; }
         public DbSet<User> Users { get; set; }
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)//This constructor pass object to Dbcontext class
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
+
         }
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
@@ -30,12 +31,13 @@ namespace FinalProject
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Patient)
                 .WithMany(p => p.Appointments)
-                .HasForeignKey(a => a.PatientId);
+                .HasForeignKey(a => a.PatientId)
+                .OnDelete(DeleteBehavior.Restrict); ;
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Doctor)
                 .WithMany(d => d.Appointments)
                 .HasForeignKey(a => a.DoctorId)
-                .OnDelete(DeleteBehavior.Cascade); // Prevent cascade delete
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
 
             modelBuilder.Entity<MedicalHistory>()
                 .HasOne(m => m.Patient)
@@ -60,6 +62,30 @@ namespace FinalProject
                 .WithMany(s => s.Appointments) // Correct: Appointments should be a list
                 .HasForeignKey(a => a.SlotId)
                 .OnDelete(DeleteBehavior.Cascade);
-                 }
+
+            modelBuilder.Entity<User>()
+               .HasOne(u => u.Doctor)
+               .WithMany()
+               .HasForeignKey(u => u.RoleId)
+              .OnDelete(DeleteBehavior.Restrict);
+
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Patient)
+                .WithMany()
+                .HasForeignKey(u => u.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Staff)
+                .WithMany()
+                .HasForeignKey(u => u.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+
+
+
+        }
     }
 }

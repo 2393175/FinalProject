@@ -198,6 +198,29 @@ namespace FinalProject
         //    return appointments;
         //}
 
+        public List<Appointment> GetPastAppointmentsByPatientId(int patientId)
+        {
+            return _context.Appointments
+                .Where(a => a.PatientId == patientId && a.AppointmentDate < DateTime.Now)
+                .Include(a => a.Doctor) // Include related doctor details
+                .Include(a => a.Slot)   // Include slot details
+                .ToList();
+        }
+        public List<AppointmentDto> GetUpcomingAppointments(int patientId)
+        {
+            return _context.Appointments
+                .Where(a => a.PatientId == patientId && a.AppointmentDate > DateTime.Now)
+                .Select(a => new AppointmentDto
+                {
+                    AppointmentId = a.AppointmentId,
+                    PatientId = a.PatientId,
+                    DoctorId = a.DoctorId,
+                    SlotId = a.SlotId,
+                    AppointmentDate = a.AppointmentDate,
+                    Status = a.Status
+                })
+                .ToList();
+        }
 
 
     }

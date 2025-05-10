@@ -10,18 +10,21 @@ namespace FinalProject
     {
         
             private readonly AppDbContext _context;
+        private readonly UserRepository _userRepository;
 
-            // Constructor to inject the DbContext
-            public StaffRepository(AppDbContext context)
+        // Constructor to inject the DbContext
+        public StaffRepository(AppDbContext context, UserRepository userRepository)
             {
                 _context = context;
-            }
+            _userRepository = userRepository;
+        }
 
             // Create - Add a new staff member
             public void AddStaff(Staff staff)
             {
                 _context.Staffs.Add(staff);
-                _context.SaveChanges(); // Commit changes to the database
+                _context.SaveChanges();
+            _userRepository.RegisterUserForStaff(staff.StaffEmail, "default_password", staff.StaffId);// Commit changes to the database
             }
 
             // Read - Get all staff members

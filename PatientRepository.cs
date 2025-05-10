@@ -11,11 +11,19 @@ namespace FinalProject
     public class PatientRepository
     {
         private readonly AppDbContext _context;
+        private readonly UserRepository _userRepository;
+       
 
-        public PatientRepository(AppDbContext context)
+        public PatientRepository(AppDbContext context,UserRepository userRepository)
         {
             _context = context;
+            _userRepository = userRepository;
         }
+
+        //public PatientRepository(AppDbContext context)
+        //{
+        //    this.context = context;
+        //}
 
         public List<Patient> GetAllPatients()
         {
@@ -45,6 +53,7 @@ namespace FinalProject
 
             _context.Patients.Add(patient);
             _context.SaveChanges();
+            _userRepository.RegisterUserForPatient(patientDto.PatientEmail, "default_password", patient.PatientId);
         }
 
         //public void UpdatePatient(Patient patient)

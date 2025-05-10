@@ -11,11 +11,19 @@ namespace FinalProject
     public class DoctorRepository
     {
         private readonly AppDbContext _context;
+        private readonly UserRepository _userRepository;
+        //private AppDbContext context;
 
-        public DoctorRepository(AppDbContext context)
+        public DoctorRepository(AppDbContext context, UserRepository userRepository)
         {
-            _context = context;
+            _context = context; // ✅ Prevents null injection
+            _userRepository = userRepository;
         }
+
+        //public DoctorRepository(AppDbContext context)
+        //{
+        //    this.context = context;
+        //}
 
         public List<Doctor> GetAllDoctors()
         {
@@ -31,7 +39,7 @@ namespace FinalProject
         {
             var doctor = new Doctor
             {
-                DoctorId = doctorDto.DoctorId, // Assuming ID is provided, otherwise remove this line
+                //DoctorId = doctorDto.DoctorId, // Assuming ID is provided, otherwise remove this line
                 DoctorName = doctorDto.DoctorName,
                 Specialization = doctorDto.Specialization,
                 DoctorEmail = doctorDto.DoctorEmail,
@@ -40,6 +48,11 @@ namespace FinalProject
 
             _context.Doctors.Add(doctor);
             _context.SaveChanges();
+            //if (_userRepository == null)
+            //{
+            //    throw new InvalidOperationException("_userRepository is not initialized.");
+            //}
+            _userRepository.RegisterUserForDoctor(doctorDto.DoctorEmail, "default_password", doctor.DoctorId);
         }
 
         public void UpdateDoctor(Doctor doctor)

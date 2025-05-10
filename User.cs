@@ -14,7 +14,13 @@ namespace FinalProject
         public string UserName { get; set; }
         public  string Password { get; set; }
         public string Role { get; set; }
+        public int RoleId { get; set; }  // Can be PatientId, DoctorId, or StaffId
 
-       
+        // ✅ Navigation Properties
+        public Patient? Patient { get; set; }
+        public Doctor? Doctor { get; set; }
+        public Staff? Staff { get; set; }
+
+
     }
 }

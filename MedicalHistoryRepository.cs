@@ -11,10 +11,12 @@ namespace FinalProject
     public class MedicalHistoryRepository
     {
         private readonly AppDbContext _context;
+       
 
         public MedicalHistoryRepository(AppDbContext context)
         {
             _context = context;
+            
         }
 
         public List<MedicalHistory> GetAllMedicalHistories()
